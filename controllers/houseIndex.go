@@ -6,26 +6,23 @@ import (
 	"loveHome/models"
 )
 
-type AreaController struct {
+type HouseIndexController struct {
 	beego.Controller
 }
 
-func (c *AreaController) RetData(resp map[string]interface{}) {
+func (c *HouseIndexController) RetData(resp map[string]interface{}) {
 	c.Data["json"] = &resp
 	c.ServeJSON()
 }
 
-func (c *AreaController) GetArea() {
-	beego.Info("connect successful")
+func (c *HouseIndexController) GetHouseIndex() {
+	beego.Info("api/v1.0/houses/index connect successful")
 	resp := make(map[string]interface{})
 	//打包成json格式，返回给客户端
 	defer c.RetData(resp)
-	//从session获取数据
-
-	//从数据库获取数据
-	area := []models.Area{} //定义一个接收数据对对象
-	o := orm.NewOrm()       //获取连接
-	n, err := o.QueryTable("area").All(&area)
+	houses := models.House{} //定义接收者
+	o := orm.NewOrm()
+	n, err := o.QueryTable("House").All(&houses)
 	if err != nil {
 		beego.Info("o.Read err:", err)
 		resp["errno"] = 4001
@@ -39,5 +36,5 @@ func (c *AreaController) GetArea() {
 	}
 	resp["errno"] = 0
 	resp["errmsg"] = "OK"
-	resp["data"] = &area
+	resp["data"] = &houses
 }
